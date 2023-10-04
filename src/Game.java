@@ -4,10 +4,12 @@ import java.util.Scanner;
 
 
 public class Game {
-    private String player = "X";
+    protected String player = "X";
     private int position;
     private ArrayList<String> values = new ArrayList<>();
     private boolean gameEnds = false;
+
+    private int cnt = 0;
     public Game() {
     }
 
@@ -19,15 +21,11 @@ public class Game {
             values.add(" ");
         }
 
-        //int position;
-        //String player = "X";
-
-        int cnt = 0;
         while (!gameEnds) {
             cnt++;
             if (cnt > 9) {
-                //gameEnds = true;
                 System.out.println("Spelet slutade oavgjort!");
+                break;
             }
             System.out.println(" " + values.get(0) + " | " + values.get(1) + " | " + values.get(2) + " ");
             System.out.println("---+---+---");
@@ -39,119 +37,31 @@ public class Game {
 
             switch (position) {
                 case 1:
-                    /*if (values.get(position-1).equals(" ")) {
-                        values.set(position-1, player);
-                        gameEnds = play(values, player);
-                        flipPlayer(player);
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }*/
-                    play2(cnt);
+                    play2();
                     break;
                 case 2:
-                    if (b.equals(" ")) {
-                        b = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 3:
-                    if (c.equals(" ")) {
-                        c = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 4:
-                    if (d.equals(" ")) {
-                        d = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 5:
-                    if (e.equals(" ")) {
-                        e = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 6:
-                    if (f.equals(" ")) {
-                        f = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 7:
-                    if (g.equals(" ")) {
-                        g = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 8:
-                    if (h.equals(" ")) {
-                        h = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 case 9:
-                    if (i.equals(" ")) {
-                        i = player;
-                        gameEnds = play(a, b, c, d, e, f, g, h, i, player);
-                        if (player.equals("X"))
-                            player = "O";
-                        else
-                            player = "X";
-                    } else {
-                        System.out.println("Positionen redan använd! Försök igen!");
-                        cnt--;
-                    }
+                    play2();
                     break;
                 default:
                     System.out.println("Försök igen!");
@@ -201,17 +111,17 @@ public class Game {
 
     }
 
-    public static void flipPlayer (String player){
+    public void flipPlayer (){
         if (player.equals("X"))
             player = "O";
         else
             player = "X";
     }
-    public void play2 (int cnt){
+    public void play2 (){
         if (values.get(position-1).equals(" ")) {
             values.set(position-1, player);
             gameEnds = play(values, player);
-            flipPlayer(player);
+            flipPlayer();
         } else {
             System.out.println("Positionen redan använd! Försök igen!");
             cnt--;
