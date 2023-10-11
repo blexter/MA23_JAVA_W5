@@ -1,6 +1,6 @@
 public class Player {
     private String name;
-    private int wins  = 0;
+    private int wins = 0;
     private String marker;
 
     public Player(String name, String marker) {

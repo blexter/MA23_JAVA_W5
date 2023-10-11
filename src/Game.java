@@ -10,17 +10,11 @@ import java.util.concurrent.ExecutionException;
 
 public class Game {
     protected ArrayList<Player> players = new ArrayList<>();
-    private int activePlayer;
-    private int position;
-    private int size = 9;
     private boolean gameEnds = false;
     private Board board;
-    private int cnt;
-    private ArrayList<Integer> positions;
 
     public Game() {
     }
-
 
     public void play() {
         Scanner sc = new Scanner(System.in);
@@ -36,7 +30,6 @@ public class Game {
         if (answer.equals("J")) {
             //Skapa datorspelare
             players.add(new Player("Dator", "O"));
-            sc.nextLine();
         } else {
             System.out.println("Ange namn för spelare 2: ");
             name = sc.nextLine();
@@ -44,62 +37,47 @@ public class Game {
         }
 
         do {
-            board = new Board(size);
-            positions = new ArrayList<>();
-            cnt = 0;
-            for (int i = 1; i <= size; i++) {
-                positions.add(i);
-            }
+            board = new Board(3);
 
             while (!gameEnds) {
 
-                if (cnt == 9) {
+                if (board.deadGame() && !gameEnds) {
+                    board.printBoard();
                     System.out.println("Spelet slutade oavgjort!");
                     break;
                 }
 
-                //Print gameboard
-                System.out.println(" " + board.getValues().get(0) + " | " + board.getValues().get(1) + " | " + board.getValues().get(2) + " ");
-                System.out.println("---+---+---");
-                System.out.println(" " + board.getValues().get(3) + " | " + board.getValues().get(4) + " | " + board.getValues().get(5) + " ");
-                System.out.println("---+---+---");
-                System.out.println(" " + board.getValues().get(6) + " | " + board.getValues().get(7) + " | " + board.getValues().get(8) + " ");
+                board.printBoard();
 
+                int position = -1;
                 //If computerplayer random a valid int and play it
-                if (players.get(activePlayer).getName().equals("Dator")) {
-                    Random rnd = new Random();
-                    position = positions.get(rnd.nextInt(positions.size()));
-                    System.out.println("Spelare " + players.get(activePlayer).getName() + ", vilken ruta (1-9)?");
+                if (players.get(board.getActivePlayer()).getName().equals("Dator")) {
+                    position = board.getComputerMove();
+                    System.out.println("Spelare " + players.get(board.getActivePlayer()).getName() + ", vilken ruta (1-9)?");
                     System.out.println(position);
                 } else {
                     //If human player
-                    System.out.println("Spelare " + players.get(activePlayer).getName() + ", vilken ruta (1-9)?");
-                    try {
-                        position = sc.nextInt();
-                        sc.nextLine();
-                    } catch (Exception ex) {
-                        position = 0;
-                        System.out.println("Du angav ett ogiltigt värde, error: " + ex.getMessage());
-                        sc.nextLine();
+                    System.out.println("Spelare " + players.get(board.getActivePlayer()).getName() + ", vilken ruta (1-9)?");
+                    position = sc.nextInt();
+                    sc.nextLine();
+                }
+                try {
+                    if (board.play(position, players.get(board.getActivePlayer()).getMarker())) {
+                        //If position is correct, do the move
+                        gameEnds = board.play(players.get(board.getActivePlayer()));
+                        board.flipPlayer();
+                    } else {
+                        //If incorrect position, print and exit
+                        System.out.println("Försök igen!");
                     }
-                }
-
-                //If position is correct, do the move
-                if (positions.contains(position)) {
-                    positions.remove(Integer.valueOf(position));
-                    play2();
-                    cnt++;
-                }
-                else {
-                    //If incorrect position, print and exit
-                    System.out.println("Försök igen!");
-                    //break;
+                } catch (Exception ex) {
+                    System.out.println("Du angav ett ogiltigt värde, error: " + ex.getMessage());
+                    sc.nextLine();
                 }
             }
 
             //Asks if you wanna play another round
             System.out.println("Spela ett varv till? (J/N)");
-            sc.nextLine();
             answer = sc.nextLine();
 
             if (!answer.equals("J")) {
@@ -108,87 +86,13 @@ public class Game {
 
             gameEnds = false;
 
-        } while (play);
+        }
+        while (play);
 
         //Print result of the game
         System.out.println("Spelare: " + players.get(0).getName() + " vann: " + players.get(0).getWins() + " gånger! Grattis!");
         System.out.println("Spelare: " + players.get(1).getName() + " vann: " + players.get(1).getWins() + " gånger! Grattis!");
-    }
-
-    public boolean winner(String x, String y, String z, String player) {
-        //Compare different values in the positions to check if theres a winner
-        if (x.equals(" "))
-            return false;
-        if (y.equals(" "))
-            return false;
-        if (z.equals(" "))
-            return false;
-        if (x.equals(y)) {
-            if (y.equals(z)) {
-                //If all ifstatments is true - we have a winner
-                System.out.println("Vi har en vinnare! Spelare: " + players.get(activePlayer).getName());
-                players.get(activePlayer).setWins();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean play(ArrayList<String> values, String player) {
-        boolean winner = false;
-        //Call method to check if the marker is the same in a row horizontal
-        for (int x = 0; x < 3; x++) {
-            winner = winner(values.get(x), values.get(x + 1), values.get(x + 2), player);
-            if (winner)
-                return true;
-            x++;
-            x++;
-        }
-
-        //Call method to check if the marker is the same in a row vertical
-        for (int x = 0; x < 3; x++) {
-            winner = winner(values.get(x), values.get(x + 3), values.get(x + 6), player);
-            if (winner)
-                return true;
-        }
-
-        //Call method to check if the marker is the same in a row diagonal from top left
-        winner = winner(values.get(0), values.get(4), values.get(8), player);
-        if (winner)
-            return true;
-
-        //Call method to check if the marker is the same in a row diagonal from top right
-        winner = winner(values.get(2), values.get(4), values.get(6), player);
-        if (winner)
-            return true;
-
-        return false;
 
     }
 
-    public void flipPlayer() {
-        //Flips so next player is the opposite after every turn of the game
-        if (activePlayer == 0)
-            activePlayer = 1;
-        else
-            activePlayer = 0;
-    }
-
-    public void play2() {
-        //Check if position is available and if so write the correct marker to that position
-        if (board.getValues().get(position - 1).equals(" ")) {
-            board.getValues().set(position - 1, players.get(activePlayer).getMarker());
-
-            //Call method to check if we have a winner and the game should end.
-            gameEnds = play(board.getValues(), players.get(activePlayer).getMarker());
-
-            //Call to flip which player next
-            flipPlayer();
-
-            //print if position already in use
-        } else {
-            System.out.println("Positionen redan använd! Försök igen!");
-            cnt--;
-        }
-    }
 }
