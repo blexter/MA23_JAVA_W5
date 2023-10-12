@@ -31,8 +31,8 @@ public class Game {
                 players.add(new Player(name, "O"));
             }
         } catch (Exception ex) {
-            System.out.println("Du angav ett ogiltigt värde, error: " + ex.getMessage());
-            sc.nextLine();
+            System.out.println("Du angav ett ogiltigt värde, error - " + ex.getMessage() + " - Avslutar programmet.");
+            System.exit(1);
         }
 
         do {
