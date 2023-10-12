@@ -17,6 +17,7 @@ public class Board {
     }
 
     public void createBoard() {
+        // Create array with gameboard
         values = new ArrayList<>();
         for (int y = 0; y < size; y++) {
             values.add(" ");
@@ -35,8 +36,14 @@ public class Board {
     }
 
     public boolean play(int position, String marker) {
+        // Checks that positions (which is available positons has the requested position
+        // and that the position in the gameboard array is equals to " "
         if (positions.contains(position) && values.get(position - 1).equals(" ")) {
+
+            // If correct, change the value in the right position in the array to active players marker
             values.set(position - 1, marker);
+
+            // Remove the postition from remaining postions
             positions.remove(Integer.valueOf(position));
             return true;
         }
@@ -44,15 +51,14 @@ public class Board {
     }
 
     public int getComputerMove() {
-        if (positions.isEmpty()) {
-            return -1;
-        }
+        // Return availible position for computer
         Random rnd = new Random();
         return positions.get(rnd.nextInt(positions.size()));
 
     }
 
     public boolean deadGame() {
+        // Check if the game is draw
         return positions.isEmpty();
     }
 

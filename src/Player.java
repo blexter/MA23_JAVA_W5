@@ -21,6 +21,7 @@ public class Player {
     }
 
     public void setWins() {
+        //Add 1 to current "wins"
         this.wins++;
     }
 }
